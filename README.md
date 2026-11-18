@@ -21,7 +21,7 @@ titles exactly (for example "Severe Hypertension News", "Diet For High Blood Pre
 
 ## What an article looks like in Sanity
 
-- `title`, `path` = `/<slug>/`: at most 4 words: OpenAI picks the main keyword, else the first meaningful title words (`SLUG_MAX_WORDS`, `SLUG_PROMPT` in site_config.py); `-2` added if taken, `publishedAt` = now, author `author-david`
+- `title`, `path` = `/<slug>/`: at most 7 words (OpenAI aims for 5 to 7): OpenAI picks the main keyword, else the first meaningful title words (`SLUG_MAX_WORDS`, `SLUG_PROMPT` in site_config.py); `-2` added if taken, `publishedAt` = now, author `author-david`
 - `categories`: the chosen Sanity categories (first = main category)
 - `body`: the article as Portable Text, then the news source line (news posts) and the disclaimer
 - `faq`: 12 questions about this article only, `mainImage`: the featured photo, `excerpt` + `seo`: meta description

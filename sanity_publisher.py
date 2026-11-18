@@ -201,7 +201,7 @@ SLUG_STOP_WORDS = {
 
 def short_slug(title: str, max_words: int = None) -> str:
     """
-    Article URL slug of at most SLUG_MAX_WORDS words (default 4): OpenAI picks the main keyword;
+    Article URL slug of at most SLUG_MAX_WORDS words (7 on this site): OpenAI picks the main keyword;
     if that fails, the title's first meaningful words are used (filler words dropped).
     """
     max_words = max_words or getattr(cfg, "SLUG_MAX_WORDS", 4)

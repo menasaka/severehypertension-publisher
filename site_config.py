@@ -119,21 +119,21 @@ SAMPLE_TOPICS = [
 # Formatting
 # ------------------------------------------------------------------------------
 H2_OPEN_TAG = "<h2>"
-# New article URLs have at most this many words. OpenAI picks the main keyword (SLUG_PROMPT);
+# New article URLs have at most this many words (OpenAI aims for 5 to 7). OpenAI picks the main keyword (SLUG_PROMPT);
 # if that fails, the first words of the title are used with filler words ("what", "and", "the") dropped.
 # A "-2" is still added when the URL is already taken.
-SLUG_MAX_WORDS = 4
+SLUG_MAX_WORDS = 7
 SLUG_PROMPT = """
-Write a short SEO URL slug for a high blood pressure article titled: "{topic}".
+Write an SEO URL slug for a high blood pressure article titled: "{topic}".
 
 Rules:
-- At most {max_words} words in total, lowercase, joined by hyphens. Every number counts as a word.
-- Use the article's main search keyword, the words people would type into Google. Keep the most important
-  words and drop filler words (what, how, your, and, the, of, to).
+- 5 to {max_words} words in total (never more than {max_words}), lowercase, joined by hyphens. Every number counts as a word.
+- Use the article's main search keyword plus the words that make this article specific, the words people
+  would type into Google. Drop only filler words (a, an, the, your, of, to, and).
 - Plain English words only. No dates, no site name, no stop words at the start or end.
 
-Examples: "Hypertensive Crisis: Which Blood Pressure Readings Need Emergency Care" -> "hypertensive-crisis-readings";
-"How to Measure Your Blood Pressure Correctly at Home" -> "measure-blood-pressure-home".
+Examples: "Hypertensive Crisis: Which Blood Pressure Readings Need Emergency Care" -> "hypertensive-crisis-blood-pressure-readings-emergency-care";
+"How to Measure Your Blood Pressure Correctly at Home" -> "how-measure-blood-pressure-correctly-at-home".
 
 Return ONLY JSON: {{"slug": "..."}}
 """
