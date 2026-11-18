@@ -1,0 +1,60 @@
+name: Replace featured image
+
+# Gives existing articles a new featured photo (Pixabay -> Pexels -> Openverse, never a photo
+# already used on the site). The article is only changed when a real photo is found.
+on:
+  workflow_dispatch:
+    inputs:
+      paths:
+        description: "Article URL path(s), space-separated, e.g. /how-to-lower-your-blood-pressure/"
+        required: false
+        default: ""
+      title_cards:
+        description: "Also fix every article whose image is a plain title card"
+        type: boolean
+        default: false
+      check:
+        description: "Only test the photo search for this title (changes nothing)"
+        required: false
+        default: ""
+      dry_run:
+        description: "Find photos but don't change the articles"
+        type: boolean
+        default: false
+
+jobs:
+  replace:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+
+      - name: Install packages
+        run: pip install openai requests Pillow python-dotenv
+
+      - name: Replace images
+        env:
+          AUTOMATION: ${{ secrets.AUTOMATION }}
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          OPENAI_MODEL: ${{ secrets.OPENAI_MODEL }}
+          SANITY_API_TOKEN: ${{ secrets.SANITY_API_TOKEN }}
+          PIXABAY_API_KEY: ${{ secrets.PIXABAY_API_KEY }}
+          PEXELS_API_KEY: ${{ secrets.PEXELS_API_KEY }}
+          INPUT_PATHS: ${{ github.event.inputs.paths }}
+          INPUT_TITLE_CARDS: ${{ github.event.inputs.title_cards }}
+          INPUT_CHECK: ${{ github.event.inputs.check }}
+          INPUT_DRY_RUN: ${{ github.event.inputs.dry_run }}
+        run: |
+          if [ -n "$INPUT_CHECK" ]; then
+            python replace_image.py --check "$INPUT_CHECK"
+            exit $?
+          fi
+          ARGS="$INPUT_PATHS"
+          if [ "$INPUT_TITLE_CARDS" = "true" ]; then ARGS="$ARGS --title-cards"; fi
+          if [ "$INPUT_DRY_RUN" = "true" ]; then ARGS="$ARGS --dry-run"; fi
+          python replace_image.py $ARGS
